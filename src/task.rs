@@ -19,12 +19,22 @@ pub struct Task {
 
 impl TasksConfig {
     pub fn new(path: Option<&PathBuf>) -> Self {
+        println!("Loading tasks from {:?}", path.unwrap());
         match path {
             Some(file_path) => match fs::read_to_string(file_path) {
-                Ok(content) => toml::from_str(&content).unwrap_or_else(|_| Self::default()),
-                Err(_) => Self::default(),
+                Ok(content) => toml::from_str(&content).unwrap_or_else(|e| {
+                    println!("Error reading tasks file: {}", e);
+                    Self::default()
+                }),
+                Err(e) => {
+                    println!("Error reading tasks file: {}", e);
+                    Self::default()
+                },
             },
-            None => Self::default(),
+            None => {
+                println!("No tasks file provided, using default configuration");
+                Self::default()
+            },
         }
     }
 }

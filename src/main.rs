@@ -1,7 +1,6 @@
 use clap::{Parser, ValueEnum};
 use std::path::PathBuf;
 use std::fs;
-use serde::{Serialize, Deserialize};
 
 mod processor;
 mod task;
@@ -48,16 +47,18 @@ fn main() {
 
     // Read task description file
     let tasks_config = task::TasksConfig::new(args.tasks_file.as_ref());
+    println!("Scheduling {} tasks", tasks_config.tasks.len());
 
     // Read processor description file
     let processor: processor::Processor = processor::Processor::new(args.processor_file.as_ref());
-
+    println!("Using processor with {} cores", processor.cores);
+    
     // Generate schedule
     let schedule: schedule::Schedule = schedule::Schedule::generate(tasks_config.tasks, processor);
-    println!("Schedule hyperperiod: {:?}", schedule.get_hyperperiod());
-
+    
     // Output results
     schedule.display();
+    println!("Schedule hyperperiod: {:?}", schedule.get_hyperperiod());
     let result = "";
     match args.output {
         Some(path) => fs::write(path, result).expect("Failed to write output file"),

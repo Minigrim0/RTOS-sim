@@ -42,7 +42,7 @@ pub struct Schedule {
 }
 
 impl Schedule {
-    fn gcd(a: u32, b: u32) -> u32 {
+    fn gcd(a: u64, b: u64) -> u64 {
         if b == 0 {
             a
         } else {
@@ -50,6 +50,11 @@ impl Schedule {
         }
     }
 
+    fn lcm(a: u64, b: u64) -> u64 {
+        (a * b) / Self::gcd(a, b)
+    }
+
+    /// Display the schedule
     pub fn display(&self) {
         for (i, processor) in self.processors.iter().enumerate() {
             println!("Processor {}:", i);
@@ -61,11 +66,11 @@ impl Schedule {
 
     /// Get the least common multiple of the periods of the tasks
     pub fn get_hyperperiod(&self) -> u32 {
-        let mut lcm = 1;
+        let mut lcm: u64 = 1;
         for task in &self.tasks {
-            lcm = lcm * task.period / Self::gcd(lcm, task.period);
+            lcm = Self::lcm(lcm, task.period as u64);
         }
-        lcm
+        lcm as u32
     }
 
     /// Get the next free time for a processor
@@ -104,6 +109,7 @@ impl Schedule {
             processors: Vec::new(),
             tasks: tasks,
         };
+
 
         for _ in 0..processor.cores {
             schedule.processors.push(Vec::new());

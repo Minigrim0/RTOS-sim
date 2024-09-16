@@ -16,10 +16,19 @@ impl Processor {
     pub fn new(path: Option<&PathBuf>) -> Self {
         match path {
             Some(file_path) => match fs::read_to_string(file_path) {
-                Ok(content) => toml::from_str(&content).unwrap_or_else(|_| Processor::default()),
-                Err(_) => Self::default(),
+                Ok(content) => toml::from_str(&content).unwrap_or_else(|e| {
+                    println!("Error reading processor file: {}", e);
+                    Processor::default()
+                }),
+                Err(e) => {
+                    println!("Error reading processor file: {}", e);
+                    Self::default()
+                },
             },
-            None => Self::default(),
+            None => {
+                println!("No processor file provided, using default configuration");
+                Self::default()
+            },
         }
     }
 }

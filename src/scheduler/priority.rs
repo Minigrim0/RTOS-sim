@@ -1,8 +1,6 @@
 use crate::scheduler::Scheduler;
-use crate::schedule::{TaskArtifact};
+use crate::schedule::{TaskArtifact, CoreSchedule, ScheduleArtifact};
 use serde::{Serialize, Deserialize};
-
-use crate::schedule::{CoreSchedule, ScheduleArtifact};
 
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -21,7 +19,7 @@ impl Default for PriorityScheduler {
 }
 
 impl Scheduler for PriorityScheduler {
-    fn schedule(&self, tasks: &Vec<TaskArtifact>, core: &CoreSchedule, preemptable: bool, current_time: u32) -> ScheduleArtifact {
+    fn schedule(&self, tasks: &Vec<TaskArtifact>, _core: &CoreSchedule, _preemptable: bool, _current_time: u32) -> ScheduleArtifact {
         ScheduleArtifact {
             task_id: tasks[0].task.id,
             start_time: 0,

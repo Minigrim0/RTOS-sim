@@ -1,0 +1,4 @@
+cores = 4
+scheduler_algorithm = "round_robin"
+preemption_enabled = true
+clock_speed = 1000
